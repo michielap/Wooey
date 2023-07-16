@@ -30,13 +30,15 @@ Getting Started
 ===============
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    install
    configuration
    running_wooey
    scripts
    wooey_ui
+   api
+   api_keys
    customizations
    remote
    upgrade_help
@@ -44,20 +46,10 @@ Getting Started
    security
 
 
-Developers
-==========
+Contributing
+============
 
 .. toctree::
    :maxdepth: 2
-   
-   dev_install
-   api
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   dev_setup

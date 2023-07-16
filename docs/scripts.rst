@@ -15,19 +15,19 @@ your ArgParse class in the global scope. For instance:
 
     import argparse
     import sys
-    
+
     parser = argparse.ArgumentParser(description="Find the sum of all the numbers below a certain number.")
     parser.add_argument('--below', help='The number to find the sum of numbers below.', type=int, default=1000)
-    
+
     def main():
         args = parser.parse_args()
         s = sum((i for i in range(args.below)))
-        print("Sum =", s)    
+        print("Sum =", s)
         return 0
-    
-    if __name__ == "__main__":    
+
+    if __name__ == "__main__":
         sys.exit(main())
-        
+
 
 If you have failing scripts, please open an issue with their contents so
 we can handle cases as they appear and try to make this as
@@ -76,3 +76,15 @@ Deleting Scripts
 
 Scripts may be deleted from the admin interface. When deleting a script,
 all related objects, such as previously run jobs, will also be deleted.
+
+Other Script Runners
+--------------------
+
+There have been several requests for more advanced script setups, such as executing R code or docker.
+For now, there is no official integrations with these languages, but it is possible to create a simple
+wrapper script that calls docker or another programming language.
+
+.. toctree::
+   :maxdepth: 1
+
+   docker_scripts

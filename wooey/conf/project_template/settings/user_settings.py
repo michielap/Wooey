@@ -1,30 +1,23 @@
 import errno
 import os
-from .wooey_settings import *
+from .wooey_settings import *  # noqa: F401, F403
+
 # This file is where the user can override and customize their installation of wooey
 
 # Wooey Apps - add additional apps here after the initial install (remember to follow everything by a comma)
 
-INSTALLED_APPS += (
-)
+INSTALLED_APPS += ()  # noqa: F405
 
 # Whether to allow anonymous job submissions, set False to disallow 'guest' job submissions
 WOOEY_ALLOW_ANONYMOUS = True
 
 ## Celery related options
 
-INSTALLED_APPS += (
-    'django_celery_results',
-    'kombu.transport.filesystem',
-)
-
-# This stores the results of tasks. For larger sites, a database may become slow and other solutions
-# such as redis should be considered.
-CELERY_RESULT_BACKEND = 'django-db'
+INSTALLED_APPS += ("kombu.transport.filesystem",)
 
 # This should absolutely be changed to a non-filesystem based broker for production deployments!
 # http://docs.celeryproject.org/en/latest/getting-started/brokers/
-CELERY_BROKER_URL = 'filesystem://'
+broker_url = "filesystem://"
 
 # This function exists just to ensure the filesystem has the correct folders
 def ensure_path(path):
@@ -37,40 +30,41 @@ def ensure_path(path):
             raise
     return path
 
-broker_dir = ensure_path(os.path.join(BASE_DIR, '.broker'))
-CELERY_BROKER_TRANSPORT_OPTIONS = {
+
+broker_dir = ensure_path(os.path.join(BASE_DIR, ".broker"))  # noqa: F405
+broker_transport_options = {
     "data_folder_in": ensure_path(os.path.join(broker_dir, "out")),
     "data_folder_out": ensure_path(os.path.join(broker_dir, "out")),
     "data_folder_processed": ensure_path(os.path.join(broker_dir, "processed")),
 }
 
 
-CELERY_TRACK_STARTED = True
+task_track_started = True
 WOOEY_CELERY = True
-CELERY_SEND_EVENTS = True
-CELERY_IMPORTS = ('wooey.tasks',)
+worker_send_task_events = True
+imports = ("wooey.tasks",)
 
 # A cache interface. This provides realtime updates for scriots and should definitely be changed
 # to use something like redis or memcached in production
-WOOEY_REALTIME_CACHE = 'default'
+WOOEY_REALTIME_CACHE = "default"
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'wooey_cache_table',
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "wooey_cache_table",
     }
 }
 
 # Things you most likely do not need to change
 
 # the directory for uploads (physical directory)
-MEDIA_ROOT = os.path.join(BASE_DIR, 'user_uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, "user_uploads")  # noqa: F405
 # the url mapping
-MEDIA_URL = '/uploads/'
+MEDIA_URL = "/uploads/"
 
 # the directory to store our webpage assets (images, javascript, etc.)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")  # noqa: F405
 # the url mapping
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 ## Here is a setup example for production servers
 
 ## A postgres database -- for multiple users a sqlite based database is asking for trouble
@@ -89,13 +83,12 @@ STATIC_URL = '/static/'
 # }
 
 ## A better celery broker -- using RabbitMQ (these defaults are from two free rabbitmq Heroku providers)
-# CELERY_BROKER_URL = os.environ.get('AMQP_URL') or \
+# broker_url = os.environ.get('AMQP_URL') or \
 #              os.environ.get('RABBITMQ_BIGWIG_TX_URL') or \
 #              os.environ.get('CLOUDAMQP_URL', 'amqp://guest:guest@localhost:5672/')
-# CELERY_BROKER_POOL_LIMIT = 1
-# CELERYD_CONCURRENCY = 1
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_TASK_ACKS_LATE = True
+# broker_pool_limit = 1
+# worker_concurrency = 1
+# task_acks_late = True
 #
 
 ## for production environments, django-storages abstracts away much of the difficulty of various storage engines.
@@ -109,9 +102,8 @@ STATIC_URL = '/static/'
 # )
 
 ## We have user authentication -- we need to use https (django-sslify)
-## NOTE: This is MIDDLEWARE and not MIDDLEWARE_CLASSES in Django 1.10+!
 # if not DEBUG:
-#     MIDDLEWARE_CLASSES = ['sslify.middleware.SSLifyMiddleware']+list(MIDDLEWARE_CLASSES)
+#     MIDDLEWARE = ['sslify.middleware.SSLifyMiddleware']+list(MIDDLEWARE)
 #     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 #
 # ALLOWED_HOSTS = (
@@ -126,7 +118,7 @@ STATIC_URL = '/static/'
 # AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY', '')
 # AWS_STORAGE_BUCKET_NAME = environ.get('AWS_STORAGE_BUCKET_NAME', '')
 # AWS_AUTO_CREATE_BUCKET = True
-# AWS_QUERYSTRING_AUTH = False
+# AWS_QUERYSTRING_AUTH = True
 # AWS_S3_SECURE_URLS = True
 # AWS_FILE_OVERWRITE = False
 # AWS_PRELOAD_METADATA = True
@@ -151,4 +143,4 @@ STATIC_URL = '/static/'
 # STATICFILES_STORAGE = DEFAULT_FILE_STORAGE = 'wooey.wooeystorage.CachedS3BotoStorage'
 # WOOEY_EPHEMERAL_FILES = True
 
-AUTHENTICATION_BACKEND = 'django.contrib.auth.backends.ModelBackend'
+AUTHENTICATION_BACKEND = "django.contrib.auth.backends.ModelBackend"

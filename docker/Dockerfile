@@ -1,6 +1,12 @@
 FROM python:3.7
 
-RUN useradd -u 1000 wooey
+ARG HOST_USER=1000
+ENV HOST_USER=${HOST_USER}
+ARG HOST_GROUP=1000
+ENV HOST_GROUP=${HOST_GROUP}
+
+RUN addgroup --gid ${HOST_GROUP} wooey
+RUN useradd -u ${HOST_USER} -g ${HOST_GROUP} wooey
 
 ARG BUILD_DIR=/wooey_build
 ENV BUILD_DIR=${BUILD_DIR}
@@ -8,7 +14,7 @@ ENV BUILD_DIR=${BUILD_DIR}
 WORKDIR ${BUILD_DIR}
 RUN chown wooey:wooey ${BUILD_DIR}
 
-RUN pip install psycopg2
+RUN pip install docker psycopg2
 
 COPY --chown=wooey:wooey setup.py MANIFEST.in Makefile README.md ${BUILD_DIR}/
 COPY --chown=wooey:wooey scripts ${BUILD_DIR}/scripts
@@ -26,6 +32,7 @@ USER wooey
 RUN wooify -p ${WOOEY_PROJECT}
 
 WORKDIR ${BUILD_DIR}/${WOOEY_PROJECT}
+ENV PYTHONPATH=${BUILD_DIR}/${WOOEY_PROJECT}:${PYTHONPATH}
 
 COPY docker/scripts/run-server run-server
 
